@@ -1,0 +1,17 @@
+{
+  "name": "nea-music-quiz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^7.4.1",
+    "chalk": "^4.1.1",
+    "keypress": "^0.2.1"
+  },
+  "type": "module"
+}
