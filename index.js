@@ -7,6 +7,7 @@ const currentPlayer = {
     logedIn: false,
     id: null,
     username: null,
+    topScore: null,
     shownSongs: [],
     points: 0,
     round: 0
@@ -72,6 +73,7 @@ async function logIn() {
                 currentPlayer.logedIn = true;
                 currentPlayer.id = id;
                 currentPlayer.username = username;
+                currentPlayer.topScore = dbRes.topScore
                 return main(`Account sucsesfully created!\nYour details are:\n   Username: ${username}\n   Password: ${password}`);
             break;
         }
@@ -88,6 +90,7 @@ async function passwordCheck(account) {
         currentPlayer.logedIn = true;
         currentPlayer.id = account.id;
         currentPlayer.username = account.username;
+        currentPlayer.topScore = account.topScore;
         return true;
     }
     else {
@@ -155,6 +158,9 @@ async function gameRound() {
         else {
             console.clear();
             console.log(`Incorrect again, the answer was: ${song.name} by ${song.artist}! You lasted ${currentPlayer.round} round${currentPlayer.round !== 1 ? 's' : ''} and finished with ${currentPlayer.points} point${currentPlayer.points !== 1 ? 's' : ''}`);
+            if (currentPlayer.points > currentPlayer.topScore) {
+                dbhandler.updateScore({id: currentPlayer.id, topScore: points});
+            };
             await waitForKey();
             return main();
         }
