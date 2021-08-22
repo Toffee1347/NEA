@@ -73,7 +73,7 @@ async function logIn() {
                 currentPlayer.logedIn = true;
                 currentPlayer.id = id;
                 currentPlayer.username = username;
-                currentPlayer.topScore = dbRes.topScore
+                currentPlayer.topScore = 0;
                 return main(`Account sucsesfully created!\nYour details are:\n   Username: ${username}\n   Password: ${password}`);
             break;
         }
