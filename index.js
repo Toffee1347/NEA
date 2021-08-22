@@ -82,7 +82,7 @@ async function logIn() {
         await passwordCheck(dbRes);
     }
 
-    main();
+    main('Logged in successfully!');
 }
 async function passwordCheck(account) {
     const password = await input(`Hi ${account.username}, Please enter your passord:  `);
