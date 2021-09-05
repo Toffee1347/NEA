@@ -2,6 +2,8 @@ import { selector, waitForKey } from './scripts/selector.js';
 import { fetchMusic } from './scripts/fetchMusic.js';
 import * as dbhandler from './scripts/dbhandler.js';
 import { input } from './scripts/utils.js';
+import hideCursor from 'hide-terminal-cursor';
+import showCursor from 'show-terminal-cursor';
 
 const currentPlayer = {
     logedIn: false,
@@ -23,6 +25,7 @@ async function main(text = '') {
             scoreboard();
         break;
         case 2:
+            hideCursor();
             const stages = ['|', '/', '--', '\\'];
             let running = true;
             let count = -1;
@@ -37,6 +40,7 @@ async function main(text = '') {
             text();
             await fetchMusic();
             running = false;
+            showCursor();
             main('Songs Refreshed!');
         break;
         case 3:
@@ -46,6 +50,7 @@ async function main(text = '') {
 }
 
 async function scoreboard() {
+    hideCursor();
     const accounts = dbhandler.allAccounts();
     const highScores = [];
     accounts.sort((a, b) => b.topScore - a.topScore);
@@ -57,6 +62,7 @@ async function scoreboard() {
         console.log(`   ${index + 1}) ${account.username} - ${account.topScore}`);
     });
     await waitForKey();
+    showCursor();
     main();
 }
 
@@ -76,6 +82,9 @@ async function logIn() {
                 currentPlayer.topScore = 0;
                 return main(`Account sucsesfully created!\nYour details are:\n   Username: ${username}\n   Password: ${password}`);
             break;
+            case  1:
+                return main();
+            break;    
         }
     }
     else {
@@ -94,7 +103,7 @@ async function passwordCheck(account) {
         return true;
     }
     else {
-        switch(await selector('Your password was inncorrect! Would you like to try again?', ['Yes', 'No'], false)) {
+        switch(await selector('Your password was incorrect! Would you like to try again?', ['Yes', 'No'], false)) {
             case 0:
                 return passwordCheck(account);
             break;
@@ -106,7 +115,7 @@ async function passwordCheck(account) {
 }
 
 async function startGame() {
-    console.log(`Hi ${currentPlayer.username}, the rules of this game are:\n   •A random song name and artist will be chosen\n   •You will see the first letter of each word in the song title\n   •You have two chances to guess the title of the song\n   •If you get it right first try, you get 3 points and if you get it right second try, you get 1 point\n   •The game will end when you make an inncorrect second guess of each round`);
+    console.log(`Hi ${currentPlayer.username}, the rules of this game are:\n   •A random song name and artist will be chosen\n   •You will see the first letter of each word in the song title\n   •You have two chances to guess the title of the song\n   •If you get it right first try, you get 3 points and if you get it right second try, you get 1 point\n   •The game will end when you make an incorrect second guess of each round`);
     await waitForKey();
 
     currentPlayer.shownSongs = [];
