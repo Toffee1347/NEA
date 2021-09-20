@@ -5,6 +5,7 @@ import { input } from './scripts/utils.js';
 import hideCursor from 'hide-terminal-cursor';
 import showCursor from 'show-terminal-cursor';
 
+// currentPlayer tracks the current user that is logged in so that they don't need to login again each time
 const currentPlayer = {
     logedIn: false,
     id: null,
@@ -15,6 +16,7 @@ const currentPlayer = {
     round: 0
 }
 
+// main is run each time you want the game to go back to the home screen e.g. after the end of the game
 async function main(text = '') {
     switch (await selector(`${text !== '' ? text + '\n\n' : ''}Welcome to the music quiz!`, ['Play', 'Scoreboard', 'Refresh Songs', 'Exit'], false)) {
         case 0:
@@ -53,7 +55,7 @@ async function scoreboard() {
     hideCursor();
     const accounts = dbhandler.allAccounts();
     const highScores = [];
-    accounts.sort((a, b) => b.topScore - a.topScore);
+    accounts.sort((a, b) => b.topScore - a.topScore); // Sorts the array into the right order
     
     console.clear();
     console.log('High Scores:');
@@ -66,6 +68,7 @@ async function scoreboard() {
     main();
 }
 
+// logIn is run when you want the user to be promted to login, it also handles creating new accounts
 async function logIn() {
     const username = await input('Please enter your username:  ');
 
@@ -93,6 +96,7 @@ async function logIn() {
 
     main('Logged in successfully!');
 }
+// passwordCheck is run to check if the user has entered the correct password
 async function passwordCheck(account) {
     const password = await input(`Hi ${account.username}, Please enter your passord:  `);
     if (password == account.password) {
@@ -114,6 +118,7 @@ async function passwordCheck(account) {
     }
 }
 
+// startGame is run to prompt the user to start the game and will tell the the rules
 async function startGame() {
     console.log(`Hi ${currentPlayer.username}, the rules of this game are:\n   •A random song name and artist will be chosen\n   •You will see the first letter of each word in the song title\n   •You have two chances to guess the title of the song\n   •If you get it right first try, you get 3 points and if you get it right second try, you get 1 point\n   •The game will end when you make an incorrect second guess of each round`);
     await waitForKey();
@@ -123,6 +128,7 @@ async function startGame() {
     currentPlayer.round = 0;
     gameRound();
 }
+// gameRound is run from the startGame and gameRound function to trigger the start of a round of the game
 async function gameRound() {
     if (currentPlayer.shownSongs.length === 100) currentPlayer.shownSongs = [];
     currentPlayer.round++;
@@ -154,8 +160,8 @@ async function gameRound() {
         string = [
             `Round: ${currentPlayer.round}   Points: ${currentPlayer.points}   Guesses Left: 1\n`,
             'Incorrect! Try again\n',
-            `Song name: ${songName}`,
-            `Artist: ${song.artist}\n`,
+            `   Song name: ${songName}`,
+            `   Artist: ${song.artist}\n`,
             'Please enter your guess:   '
         ];
         guess = await input(string.join('\n'));
@@ -168,7 +174,7 @@ async function gameRound() {
             console.clear();
             console.log(`Incorrect again, the answer was: ${song.name} by ${song.artist}! You lasted ${currentPlayer.round} round${currentPlayer.round !== 1 ? 's' : ''} and finished with ${currentPlayer.points} point${currentPlayer.points !== 1 ? 's' : ''}`);
             if (currentPlayer.points > currentPlayer.topScore) {
-                dbhandler.updateScore({id: currentPlayer.id, topScore: points});
+                dbhandler.updateScore({id: currentPlayer.id, topScore: currentPlayer.points});
             };
             await waitForKey();
             return main();
