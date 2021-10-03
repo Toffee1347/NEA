@@ -4,6 +4,7 @@ import * as dbhandler from './scripts/dbhandler.js';
 import { input } from './scripts/utils.js';
 import hideCursor from 'hide-terminal-cursor';
 import showCursor from 'show-terminal-cursor';
+import chalk from 'chalk';
 
 // currentPlayer tracks the current user that is logged in so that they don't need to login again each time
 const currentPlayer = {
@@ -86,7 +87,7 @@ async function logIn() {
                 currentPlayer.id = id;
                 currentPlayer.username = username;
                 currentPlayer.topScore = 0;
-                return main(`Account sucsesfully created!\nYour details are:\n   Username: ${username}\n   Password: ${password}`);
+                return main(chalk.green(`Account sucsesfully created!\nYour details are:\n   Username: ${username}\n   Password: ${password}`));
             break;
             case  1:
                 return main();
@@ -141,6 +142,7 @@ async function gameRound() {
     currentPlayer.shownSongs.push(song);
 
     song = dbhandler.getSong({id: song});
+    if (!song) return main(chalk.red('ERROR: Please run Refresh Songs first'));
     console.clear();
     
     const songName = `${song.name.split(' ').map((word) => (word[0] + ('_').repeat(word.substring(1).length))).join(' ')}`;
