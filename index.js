@@ -40,10 +40,10 @@ async function main(text = '') {
                 setTimeout(text, 200);
             }
             text();
-            await fetchMusic();
+            const res = await fetchMusic();
             running = false;
             showCursor();
-            main('Songs Refreshed!');
+            main(res ? 'Songs Refreshed!' : 'Failed to fetch songs');
         break;
         case 3:
             process.exit();
@@ -54,7 +54,6 @@ async function main(text = '') {
 async function scoreboard() {
     hideCursor();
     const accounts = dbhandler.allAccounts();
-    const highScores = [];
     accounts.sort((a, b) => b.topScore - a.topScore); // Sorts the array into the right order
     
     console.clear();
