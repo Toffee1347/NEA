@@ -11,6 +11,7 @@
   "dependencies": {
     "better-sqlite3": "^7.4.1",
     "chalk": "^4.1.1",
+    "fs": "^0.0.1-security",
     "hide-terminal-cursor": "^0.0.1",
     "node-fetch": "^2.6.1",
     "show-terminal-cursor": "^0.0.2"

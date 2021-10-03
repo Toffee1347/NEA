@@ -46,6 +46,7 @@ async function main(text = '') {
             main(res ? 'Songs Refreshed!' : 'Failed to fetch songs');
         break;
         case 3:
+            console.clear();
             process.exit();
         break;
     }
@@ -62,6 +63,9 @@ async function scoreboard() {
         if (index > 4) return;
         console.log(`   ${index + 1}) ${account.username} - ${account.topScore}`);
     });
+    if (accounts.length === 0) {
+        console.log(`   No accounts have been made yet! Be the first by signing up`);
+    }
     await waitForKey();
     showCursor();
     main();

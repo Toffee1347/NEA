@@ -1,5 +1,8 @@
 import sqlite from 'better-sqlite3';
+import {writeFile, mkdir} from 'fs';
 
+mkdir('./data', () => {});
+writeFile('./data/main.db', '', () => {});
 const db = sqlite('./data/main.db');
 
 db.prepare('CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY AUTOINCREMENT, username STRING, password STRING, topScore INT)').run();

@@ -16,7 +16,10 @@ let info = {
 readline.emitKeypressEvents(process.stdin);
 
 process.stdin.on('keypress', function (ch, key) {
-    if (key.name === 'c' && key.control) return process.exit();
+    if (key.name === 'c' && key.control) {
+        console.clear();
+        return process.exit();
+    }
     
     if (keyPress) {
         keyPress = false;
